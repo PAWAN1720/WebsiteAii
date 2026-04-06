@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoro Cloud Hosting | Budget to Premium Minecraft Hosting</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- DESIGN TOKENS --- */
+        :root {
+            --bg-body: #050505;
+            --bg-card: rgba(15, 15, 15, 0.7);
+            --neon-green: #00ff88;
+            --neon-blue: #00d4ff;
+            --text-main: #ffffff;
+            --text-dim: #b0b0b0;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* --- RESET & GLOBALS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass-border);
+            border-top: 4px solid var(--neon-green);
+            border-bottom: 4px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- BACKGROUND --- */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #050505 100%);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 25px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.4s;
+        }
+        nav.scrolled {
+            padding: 15px 8%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: var(--transition);
+            opacity: 0.7;
+        }
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .status-pill {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            animation: fadeInUp 0.8s ease;
+        }
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            margin-bottom: 20px;
+            line-height: 1.1;
+            animation: fadeInUp 1s ease;
+        }
+        .hero h1 span {
+            color: var(--neon-blue);
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+        .hero p {
+            color: var(--text-dim);
+            max-width: 600px;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; animation: fadeInUp 1.4s ease;}
+        .btn {
+            padding: 16px 45px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn-main {
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue));
+            color: #000;
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2);
+        }
+        .btn-main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 1px solid var(--glass-border);
+        }
+        .btn-outline:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 212, 255, 0.05);
+            transform: translateY(-5px);
+        }
+
+        /* --- FEATURES --- */
+        .section { padding: 120px 8%; }
+        .section-header { text-align: center; margin-bottom: 80px; }
+        .section-header h2 { font-size: 3rem; margin-bottom: 15px; }
+        .accent-line { width: 80px; height: 4px; background: var(--neon-green); margin: 0 auto; border-radius: 10px; }
+
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .feat-card {
+            background: var(--bg-card);
+            padding: 50px 40px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .feat-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--neon-green);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.1);
+        }
+        .feat-card i {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            background: linear-gradient(var(--neon-green), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: 0.3s;
+        }
+        .feat-card:hover i { transform: scale(1.1); filter: drop-shadow(0 0 10px var(--neon-green)); }
+
+        /* --- PRICING TABS --- */
+        .tier-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        .tier-btn {
+            padding: 12px 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+        .tier-btn.active {
+            background: var(--neon-green);
+            color: black;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .pricing-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            animation: fadeIn 0.6s ease;
+        }
+        .pricing-grid.active { display: grid; }
+
+        .plan-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        .plan-card.popular {
+            border: 2px solid var(--neon-blue);
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.15);
+        }
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: var(--neon-blue);
+            color: black;
+            padding: 8px 45px;
+            transform: rotate(45deg);
+            font-size: 0.7rem;
+            font-weight: 900;
+        }
+        .plan-card h3 { font-size: 2rem; margin-bottom: 5px; }
+        .cpu-tag { font-size: 0.8rem; color: var(--neon-blue); font-weight: 700; text-transform: uppercase; margin-bottom: 20px; display: block; }
+        .price-text { font-size: 1.2rem; font-weight: 700; color: var(--neon-green); margin-bottom: 30px; }
+        .plan-card ul { list-style: none; margin-bottom: 40px; }
+        .plan-card ul li { margin-bottom: 15px; color: var(--text-dim); font-size: 0.9rem; }
+        .plan-card ul li i { color: var(--neon-green); margin-right: 12px; }
+
+        .btn-coming {
+            background: #222;
+            color: #555;
+            cursor: not-allowed;
+            pointer-events: none;
+            width: 100%;
+        }
+
+        /* --- CUSTOM BUILDER --- */
+        .builder-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 50px;
+            border-radius: 32px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+        }
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        @media (max-width: 768px) { .builder-grid { grid-template-columns: 1fr; } }
+
+        .builder-label { display: block; margin-bottom: 15px; font-weight: 700; color: var(--text-main); }
+        .slider-container { position: relative; margin-bottom: 30px; }
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            appearance: none;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        .dropdown {
+            width: 100%;
+            padding: 15px;
+            background: #111;
+            color: white;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-weight: 600;
+            outline: none;
+        }
+        .live-display {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px dashed var(--neon-blue);
+            text-align: center;
+        }
+        .display-ram { font-size: 3rem; font-weight: 900; color: var(--neon-blue); display: block; }
+        .display-tier { color: var(--neon-green); text-transform: uppercase; font-weight: 700; letter-spacing: 2px; }
+
+        /* --- TESTIMONIALS --- */
+        .testi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        .testi-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 40px;
+            border-radius: 24px;
+            border-left: 4px solid var(--neon-blue);
+            transition: var(--transition);
+        }
+        .testi-card:hover { transform: scale(1.02); background: rgba(255, 255, 255, 0.05); }
+        .testi-card p { font-style: italic; color: var(--text-dim); margin-bottom: 25px; }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-info .avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; }
+        .user-info h4 { font-size: 1rem; }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 80px 8% 40px;
+            background: #000;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+        .footer-logo { font-size: 2rem; margin-bottom: 30px; display: block; }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; }
+        .footer-links a { color: var(--text-dim); font-size: 1.5rem; transition: 0.3s; }
+        .footer-links a:hover { color: var(--neon-green); transform: translateY(-5px); }
+        .copyright { color: #444; font-size: 0.8rem; border-top: 1px solid #111; padding-top: 40px; margin-top: 40px; }
+
+        /* --- UTILS & ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 1s all ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            nav .nav-links { display: none; }
+            .section { padding: 80px 5%; }
+            .hero h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">Zoro Cloud</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#pricing">Plans</a>
+            <a href="#builder">Builder</a>
+            <a href="https://discord.gg/yourlink" target="_blank">Discord</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="status-pill">
+            <div class="pulse-dot"></div>
+            ALL SYSTEMS OPERATIONAL
+        </div>
+        <h1>Zoro <span>Cloud</span> Hosting</h1>
+        <p>Premium Minecraft server hosting without the premium price. Choose between our optimized Budget, Basic, or high-performance Ryzen hardware.</p>
+        <div class="btn-group">
+            <a href="#pricing" class="btn btn-main">Get Started</a>
+            <a href="#builder" class="btn btn-outline">Build Custom Plan</a>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="section-header reveal">
+            <h2>Why Zoro Cloud?</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="feat-grid">
+            <div class="feat-card reveal">
+                <i class="fas fa-microchip"></i>
+                <h3>NVMe SSD Storage</h3>
+                <p>Lightning fast world generation and zero chunk lag with high-speed NVMe drives.</p>
+            </div>
+            <div class="feat-card reveal">
+                <i class="fas fa-shield-virus"></i>
+                <h3>DDoS Protection</h3>
+                <p>Enterprise-grade 1Tbps+ mitigation keeps your server online under the heaviest attacks.</p>
+            </div>
+            <div class="feat-card reveal">
+                <i class="fas fa-tachometer-alt"></i>
+                <h3>Instant Setup</h3>
+                <p>No waiting around. Your Minecraft server is ready to play seconds after checkout.</p>
+            </div>
+            <div class="feat-card reveal">
+                <i class="fas fa-globe"></i>
+                <h3>Low Ping Servers</h3>
+                <p>Strategically located data centers worldwide to ensure the best connection for players.</p>
+            </div>
+            <div class="feat-card reveal">
+                <i class="fas fa-clock"></i>
+                <h3>24/7 Uptime</h3>
+                <p>99.9% uptime guarantee backed by redundant power and networking infrastructure.</p>
+            </div>
+            <div class="feat-card reveal">
+                <i class="fas fa-tools"></i>
+                <h3>Control Panel</h3>
+                <p>Manage everything via our custom, intuitive panel. Plugins, Mods, and Files at your fingertips.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section" id="pricing">
+        <div class="section-header reveal">
+            <h2>Select Your Power</h2>
+            <div class="accent-line"></div>
+        </div>
+
+        <div class="tier-switcher reveal">
+            <button class="tier-btn active" onclick="switchTier('budget')">Budget (Xeon)</button>
+            <button class="tier-btn" onclick="switchTier('basic')">Basic (Balanced)</button>
+            <button class="tier-btn" onclick="switchTier('premium')">Premium (Ryzen)</button>
+        </div>
+
+        <!-- Budget Plans Container -->
+        <div id="budget-plans" class="pricing-grid active">
+            <!-- JavaScript will auto-populate these to keep code clean, or we can hardcode for performance -->
+            <!-- Hardcoding 8GB Most Popular as requested -->
+            <div class="plan-card"><h3>1GB</h3><span class="cpu-tag">Budget Xeon</span><p class="price-text">Coming Soon</p><ul><li><i class="fas fa-check"></i> NVMe SSD</li><li><i class="fas fa-check"></i> 99.9% Uptime</li><li><i class="fas fa-check"></i> DDoS Protection</li></ul><button class="btn btn-coming">Coming Soon</button></div>
+            <div class="plan-card"><h3>2GB</h3><span class="cpu-tag">Budget Xeon</span><p class="price-text">Coming Soon</p><ul><li><i class="fas fa-check"></i> NVMe SSD</li><li><i class="fas fa-check"></i> 99.9% Uptime</li><li><i class="fas fa-check"></i> DDoS Protection</li></ul><button class="btn btn-coming">Coming Soon</button></div>
+            <div class="plan-card"><h3>4GB</h3><span class="cpu-tag">Budget Xeon</span><p class="price-text">Coming Soon</p><ul><li><i class="fas fa-check"></i> NVMe SSD</li><li><i class="fas fa-check"></i> 99.9% Uptime</li><li><i class="fas fa-check"></i> DDoS Protection</li></ul><button class="btn btn-coming">Coming Soon</button></div>
+            <div class="plan-card popular"><div class="popular-badge">MOST POPULAR</div><h3>8GB</h3><span class="cpu-tag">Budget Xeon</span><p class="price-text">Contact for Price</p><ul><li><i class="fas fa-check"></i> NVMe SSD</li><li><i class="fas fa-check"></i> 99.9% Uptime</li><li><i class="fas fa-check"></i> DDoS Protection</li></ul><button class="btn btn-coming">Contact Support</button></div>
+            <div class="plan-card"><h3>16GB</h3><span class="cpu-tag">Budget Xeon</span><p class="price-text">Coming Soon</p><ul><li><i class="fas fa-check"></i> NVMe SSD</li><li><i class="fas fa-check"></i> 99.9% Uptime</li><li><i class="fas fa-check"></i> DDoS Protection</li></ul><button class="btn btn-coming">Coming Soon</button></div>
+            <div class="plan-card"><h3>32GB</h3><span class="cpu-tag">Budget Xeon</span><p class="price-text">Coming Soon</p><ul><li><i class="fas fa-check"></i> NVMe SSD</li><li><i class="fas fa-check"></i> 99.9% Uptime</li><li><i class="fas fa-check"></i> DDoS Protection</li></ul><button class="btn btn-coming">Coming Soon</button></div>
+        </div>
+
+        <!-- Basic & Premium follow the same structure (Generated via JS to save space in this file) -->
+        <div id="basic-plans" class="pricing-grid"></div>
+        <div id="premium-plans" class="pricing-grid"></div>
+    </section>
+
+    <!-- Custom Builder Section -->
+    <section class="section" id="builder">
+        <div class="section-header reveal">
+            <h2>Build Your Own Plan</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="builder-wrapper reveal">
+            <div class="builder-grid">
+                <div class="builder-inputs">
+                    <div class="slider-container">
+                        <label class="builder-label">Select RAM Allocation</label>
+                        <input type="range" id="ramRange" min="1" max="32" value="8" step="1">
+                    </div>
+                    <div class="select-container">
+                        <label class="builder-label">Choose Hardware Tier</label>
+                        <select id="tierSelect" class="dropdown">
+                            <option value="Budget (Intel Xeon)">Budget (Intel Xeon)</option>
+                            <option value="Basic (Balanced CPU)">Basic (Balanced CPU)</option>
+                            <option value="Premium (AMD Ryzen)" selected>Premium (AMD Ryzen)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="builder-result">
+                    <div class="live-display">
+                        <p>Selected Configuration:</p>
+                        <span class="display-ram" id="ramDisplay">8GB</span>
+                        <span class="display-tier" id="tierDisplay">Premium Ryzen</span>
+                        <p style="margin-top: 15px; font-size: 0.8rem; opacity: 0.6;">Estimated Performance: <span id="perf-level" style="color: var(--neon-green)">EXCELLENT</span></p>
+                    </div>
+                    <button class="btn btn-main" style="width: 100%; margin-top: 20px;">Request Quote</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section">
+        <div class="section-header reveal">
+            <h2>Community Voice</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="testi-container reveal">
+            <div class="testi-card">
+                <p>"The Ryzen nodes are absolutely cracked. Zero tps drops even with 40+ players on our modded server. Best hosting I've used."</p>
+                <div class="user-info">
+                    <div class="avatar"></div>
+                    <div><h4>HyperX_PvP</h4><small>Server Owner</small></div>
+                </div>
+            </div>
+            <div class="testi-card">
+                <p>"Moved our community from a major provider and the difference in ping is day and night. Their support is actually human too."</p>
+                <div class="user-info">
+                    <div class="avatar"></div>
+                    <div><h4>Sarah_Plays</h4><small>SMP Admin</small></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <span class="logo footer-logo">Zoro Cloud</span>
+        <div class="footer-links">
+            <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p style="max-width: 600px; margin: 0 auto; color: var(--text-dim); font-size: 0.9rem;">
+            High-performance hosting solutions for gaming communities. Enterprise hardware at scale.
+        </p>
+        <p class="copyright">
+            &copy; 2024 Zoro Cloud Hosting. Not an official Minecraft product. Not associated with Mojang or Microsoft.
+        </p>
+    </footer>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // 1. Loader Logic
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 600);
+        });
+
+        // 2. Navbar & Scroll Reveal
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const revealTop = el.getBoundingClientRect().top;
+                if (revealTop < window.innerHeight - 100) el.classList.add('active');
+            });
+        });
+
+        // 3. Pricing Tier Switcher
+        function switchTier(tier) {
+            // Update buttons
+            document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update grids
+            document.querySelectorAll('.pricing-grid').forEach(grid => grid.classList.remove('active'));
+            document.getElementById(`${tier}-plans`).classList.add('active');
+        }
+
+        // 4. Generate Basic and Premium Grids (to keep HTML clean)
+        function generatePlans(containerId, cpuName) {
+            const container = document.getElementById(containerId);
+            const ramSteps = [1, 2, 4, 8, 16, 32];
+            let html = '';
+            
+            ramSteps.forEach(ram => {
+                const isPopular = ram === 8;
+                html += `
+                    <div class="plan-card ${isPopular ? 'popular' : ''}">
+                        ${isPopular ? '<div class="popular-badge">RECOMMENDED</div>' : ''}
+                        <h3>${ram}GB</h3>
+                        <span class="cpu-tag">${cpuName}</span>
+                        <p class="price-text">${isPopular ? 'Contact for Price' : 'Coming Soon'}</p>
+                        <ul>
+                            <li><i class="fas fa-check"></i> NVMe SSD Storage</li>
+                            <li><i class="fas fa-check"></i> Full Control Panel</li>
+                            <li><i class="fas fa-check"></i> 99.9% Uptime</li>
+                        </ul>
+                        <button class="btn btn-coming">Coming Soon</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        generatePlans('basic-plans', 'Balanced CPU');
+        generatePlans('premium-plans', 'Ryzen 9 7950X');
+
+        // 5. Custom Plan Builder Logic
+        const ramRange = document.getElementById('ramRange');
+        const tierSelect = document.getElementById('tierSelect');
+        const ramDisplay = document.getElementById('ramDisplay');
+        const tierDisplay = document.getElementById('tierDisplay');
+        const perfLevel = document.getElementById('perf-level');
+
+        function updateBuilder() {
+            const ram = ramRange.value;
+            const tier = tierSelect.value.split('(')[0];
+            ramDisplay.innerText = `${ram}GB`;
+            tierDisplay.innerText = tier;
+
+            if(ram < 4) { perfLevel.innerText = 'BASIC'; perfLevel.style.color = '#ffaa00'; }
+            else if(ram < 12) { perfLevel.innerText = 'SMOOTH'; perfLevel.style.color = 'var(--neon-blue)'; }
+            else { perfLevel.innerText = 'EXCELLENT'; perfLevel.style.color = 'var(--neon-green)'; }
+        }
+
+        ramRange.addEventListener('input', updateBuilder);
+        tierSelect.addEventListener('change', updateBuilder);
+
+        // 6. Particles Config
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#00ff88", "#00d4ff"] },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.3, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>
